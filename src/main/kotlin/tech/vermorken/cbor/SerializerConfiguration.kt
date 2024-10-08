@@ -16,21 +16,21 @@ class SerializerConfiguration {
 
     @Bean
     fun eventSerializer(
-        @Qualifier("messageSerializer") messageSerializer: Serializer,
+        cborSerializer: Serializer,
         @Qualifier("jacksonSerializer") jacksonSerializer: JacksonSerializer
     ): Serializer {
-        return JsonCborMultiSerializer(messageSerializer as JacksonSerializer, jacksonSerializer)
+        return JsonCborMultiSerializer(cborSerializer as JacksonSerializer, jacksonSerializer)
     }
 
     @Bean
     fun jacksonSerializer() : JacksonSerializer {
         val objectMapper = ObjectMapper().findAndRegisterModules()
-        return JacksonSerializer.builder().objectMapper(objectMapper).build();
+        return JacksonSerializer.builder().objectMapper(objectMapper).build()
     }
 
     @Bean
     @Primary
-    fun messageSerializer(defaultAxonCBORMapper: CBORMapper) : Serializer {
+    fun primarySerializer(defaultAxonCBORMapper: CBORMapper) : Serializer {
         return JacksonSerializer.builder().objectMapper(defaultAxonCBORMapper).build()
     }
 
